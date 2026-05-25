@@ -11,7 +11,8 @@ import SectionHeader from '../components/shop/SectionHeader';
 import ProductGrid from '../components/shop/ProductGrid';
 import ShopFooter from '../components/shop/ShopFooter';
 import { fetchProductDetail } from '../util/catalog.api';
-
+import { addToCartAPI } from '../util/cart.api';
+import { message } from 'antd';
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -27,6 +28,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -53,6 +55,24 @@ const ProductDetailPage = () => {
   const handleQuantity = (next) => {
     const normalized = Math.min(Math.max(next, 1), maxQty || 1);
     setQuantity(normalized);
+  };
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    setIsAdding(true);
+    try {
+      const productId = product._id || product.id; 
+      const res = await addToCartAPI(productId, quantity);
+      
+      if (res && res.success) {
+        message.success("Đã thêm sản phẩm vào giỏ hàng thành công!");
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      message.error("Vui lòng đăng nhập để thêm vào giỏ hàng!");
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   if (loading) {
@@ -220,9 +240,15 @@ const ProductDetailPage = () => {
                     </button>
                   </div>
                   <button
-                    className="flex-1 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white"
+                    onClick={handleAddToCart}
+                    disabled={isAdding}
+                    className={`flex-1 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors ${
+                      isAdding 
+                        ? 'bg-slate-400 cursor-not-allowed' 
+                        : 'bg-slate-900 hover:bg-slate-800'
+                    }`}
                   >
-                    Add to cart
+                    {isAdding ? 'Đang thêm...' : 'Add to cart'}
                   </button>
                 </div>
                 <p className="mt-3 text-xs text-slate-400">Quantity adjusts to available stock.</p>

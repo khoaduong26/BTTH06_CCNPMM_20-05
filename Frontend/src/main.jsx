@@ -18,7 +18,7 @@ import { AuthWrapper } from './components/context/auth.context.jsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
 import CategoryPage from './pages/category';
 import VerifyOTP from './pages/verify-otp.jsx'; 
-
+import CartPage from './pages/cart.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -51,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "category/:categoryId",
         element: <CategoryPage />
+      },
+      {
+        path: "cart",
+        element: <ProtectedRoute allowedRoles={["USER", "ADMIN"]}><CartPage /></ProtectedRoute>
       }
     ]
   },

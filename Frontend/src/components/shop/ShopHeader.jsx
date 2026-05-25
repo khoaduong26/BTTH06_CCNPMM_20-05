@@ -48,10 +48,13 @@ const ShopHeader = ({ searchValue = '', onSearchChange }) => {
               />
             </div>
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700">
+              <Link 
+                to="/cart" 
+                className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700"
+              >
                 <ShoppingCartOutlined />
                 Cart
-              </button>
+              </Link>
               <div className="flex items-center gap-3 rounded-full border border-blue-100 bg-white px-4 py-2 shadow-sm shadow-blue-500/5">
                 <div className="h-8 w-8 rounded-full bg-primary text-xs font-semibold text-white flex items-center justify-center">
                   {auth?.user?.name?.[0]?.toUpperCase() || auth?.user?.email?.[0]?.toUpperCase() || 'U'}
