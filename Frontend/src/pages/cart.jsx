@@ -89,8 +89,14 @@ const CartPage = () => {
 
     // Chỉ tính tổng tiền của những sản phẩm đang được tick
     const totalPrice = cartItems
-        .filter(item => selectedIds.includes(item.product?._id || item.product?.id))
-        .reduce((total, item) => total + ((item.product?.price || 0) * item.quantity), 0);
+    .filter(item => selectedIds.includes(item.product?._id || item.product?.id))
+    .reduce((total, item) => {
+        const actualPrice = (item.product?.discountPrice && item.product?.discountPrice > 0)
+            ? item.product.discountPrice
+            : (item.product?.price || 0);
+            
+        return total + (actualPrice * item.quantity);
+    }, 0);
 
     const isAllSelected = cartItems.length > 0 && selectedIds.length === cartItems.length;
 

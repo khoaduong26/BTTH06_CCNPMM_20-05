@@ -110,7 +110,14 @@ const CheckoutPage = () => {
         }
     };
 
-    const subtotal = cartItems.reduce((sum, item) => sum + ((item.product?.price || 0) * item.quantity), 0);
+    const subtotal = cartItems.reduce((sum, item) => {
+        // Ưu tiên lấy discountPrice, nếu không có thì lấy price
+        const actualPrice = (item.product?.discountPrice && item.product?.discountPrice > 0)
+            ? item.product.discountPrice
+            : (item.product?.price || 0);
+            
+        return sum + (actualPrice * item.quantity);
+    }, 0);
     const total = subtotal; // Freeship
 
     if (loadingData) return <div className="text-center py-10">Đang tải thông tin đơn hàng...</div>;
@@ -161,9 +168,24 @@ const CheckoutPage = () => {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-gray-600">{item.product?.price?.toLocaleString('vi-VN')} đ</p>
+                                        {/* Nếu có giá giảm thì in giá giảm + giá gốc gạch ngang, nếu không thì in giá gốc */}
+                                        {item.product?.discountPrice && item.product?.discountPrice > 0 ? (
+                                            <div className="text-gray-600">
+                                                <span className="line-through text-gray-400 text-sm mr-2">{item.product?.price?.toLocaleString('vi-VN')} đ</span>
+                                                <span>{item.product?.discountPrice?.toLocaleString('vi-VN')} đ</span>
+                                            </div>
+                                        ) : (
+                                            <div className="text-gray-600">{item.product?.price?.toLocaleString('vi-VN')} đ</div>
+                                        )}
+                                        
                                         <p className="text-sm text-gray-500">x{item.quantity}</p>
-                                        <p className="font-semibold text-gray-800 mt-1">{((item.product?.price || 0) * item.quantity).toLocaleString('vi-VN')} đ</p>
+                                        
+                                        {/* Tổng tiền của món đó = Giá áp dụng nhân số lượng */}
+                                        <p className="font-semibold text-gray-800 mt-1">
+                                            {(((item.product?.discountPrice && item.product?.discountPrice > 0) 
+                                                ? item.product.discountPrice 
+                                                : (item.product?.price || 0)) * item.quantity).toLocaleString('vi-VN')} đ
+                                        </p>
                                     </div>
                                 </div>
                             ))}

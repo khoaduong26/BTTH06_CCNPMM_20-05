@@ -30,10 +30,13 @@ exports.checkoutCOD = async (req, res) => {
       return res.status(400).json({ message: 'Không tìm thấy sản phẩm hợp lệ trong giỏ hàng' });
     }
 
-    // 3. Tính toán tổng tiền chỉ cho các sản phẩm đã chọn
     let total = 0;
     selectedCartItems.forEach(item => {
-      total += item.product.price * item.quantity;
+      const actualPrice = (item.product.discountPrice && item.product.discountPrice > 0) 
+                          ? item.product.discountPrice 
+                          : item.product.price;
+                          
+      total += actualPrice * item.quantity;
     });
 
     // 4. Tạo Đơn hàng mới (Order)
@@ -154,49 +157,3 @@ exports.cancelOrder = async (req, res) => {
   }
 };  
 
-exports.momoIPN = async (req, res) => {
-    try {
-        console.log("MoMo gửi IPN về:", req.body);
-        const {
-            partnerCode, orderId, requestId, amount, orderInfo, orderType,
-            transId, resultCode, message, payType, responseTime, extraData, signature
-        } = req.body;
-
-        const accessKey = process.env.MOMO_ACCESS_KEY;
-        const secretkey = process.env.MOMO_SECRET_KEY;
-
-        // 1. Tạo lại chữ ký để đối chiếu (Bảo mật: Xác nhận đúng là MoMo gửi chứ không phải hacker)
-        const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&payType=${payType}&requestId=${requestId}&responseTime=${responseTime}&resultCode=${resultCode}&transId=${transId}`;
-        const expectedSignature = crypto.createHmac('sha256', secretkey).update(rawSignature).digest('hex');
-
-        if (signature !== expectedSignature) {
-            console.log("Cảnh báo: Chữ ký MoMo không hợp lệ!");
-            return res.status(400).json({ message: 'Sai chữ ký bảo mật' });
-        }
-
-        // 2. Tìm đơn hàng trong CSDL
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
-        }
-
-        // 3. Kiểm tra mã trạng thái MoMo trả về (resultCode == 0 là thành công)
-        if (resultCode === 0) {
-            // Thanh toán thành công -> Đổi trạng thái sang Đã xác nhận (Hoặc bạn có thể tạo thêm trạng thái 'PAID' nếu muốn)
-            order.status = 'CONFIRMED'; 
-            await order.save();
-            console.log(`Đơn hàng ${orderId} đã được thanh toán thành công qua MoMo!`);
-        } else {
-            // Khách hàng hủy thanh toán hoặc nạp lỗi
-            order.status = 'CANCELLED';
-            await order.save();
-            console.log(`Đơn hàng ${orderId} thanh toán thất bại/bị hủy.`);
-        }
-
-        // 4. MoMo yêu cầu phải trả về status 204 (No Content) để xác nhận là Backend đã nhận được IPN
-        return res.status(204).send();
-    } catch (error) {
-        console.error("Lỗi xử lý IPN MoMo:", error);
-        res.status(500).json({ message: 'Lỗi server' });
-    }
-}
