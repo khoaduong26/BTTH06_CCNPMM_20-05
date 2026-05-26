@@ -20,7 +20,7 @@ const ShopHeader = ({ searchValue = '', onSearchChange }) => {
             <Link to="/" className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-white font-bold shadow-lg shadow-blue-500/20">Q</div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Quick & Legit</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Shop</p>
                 <h1 className="font-display text-xl text-ink">Khoa</h1>
               </div>
             </Link>
@@ -33,7 +33,7 @@ const ShopHeader = ({ searchValue = '', onSearchChange }) => {
             <Link to="/" className="transition hover:text-primary">Home</Link>
             <a href="#latest" className="transition hover:text-primary">Latest</a>
             <a href="#best-sellers" className="transition hover:text-primary">Best Sellers</a>
-            <a href="#promotions" className="transition hover:text-primary">Promotions</a>
+            {/* <a href="#promotions" className="transition hover:text-primary">Promotions</a> */}
             <a href="#categories" className="transition hover:text-primary">Categories</a>
           </nav>
 

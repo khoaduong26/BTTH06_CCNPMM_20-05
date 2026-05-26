@@ -1,59 +1,35 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
-const Discount = require('../models/Discount');
 const mongoose = require('mongoose');
 
 const normalizeNumber = (value, fallback) => {
-  if (value === undefined || value === null || value === '') {
-    return fallback;
-  }
+  if (value === undefined || value === null || value === '') return fallback;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
 const buildSearchFilter = ({ search }) => {
-  if (!search) {
-    return {};
-  }
+  if (!search) return {};
   const regex = new RegExp(search, 'i');
-  return {
-    $or: [{ name: regex }, { description: regex }]
-  };
+  return { $or: [{ name: regex }, { description: regex }] };
 };
 
-const buildProductFilters = ({
-  categoryId,
-  minPrice,
-  maxPrice,
-  discounted,
-  bestSelling,
-  newest,
-  inStock
-}) => {
-  const filters = {
-    isActive: true
-  };
+// ĐÃ SỬA: Bỏ các tham số thừa, đổi discounted thành onSale
+const buildProductFilters = ({ categoryId, minPrice, maxPrice, onSale, inStock }) => {
+  const filters = { isActive: true };
 
-  if (categoryId) {
-    filters.category = categoryId;
-  }
-
-  if (inStock === true) {
-    filters.stockQuantity = { $gt: 0 };
-  }
-
-  if (discounted === true) {
-    filters.discountPrice = { $ne: null };
+  if (categoryId) filters.category = categoryId;
+  if (inStock === true) filters.stockQuantity = { $gt: 0 };
+  
+  // LOGIC MỚI: Chỉ lấy những sản phẩm có nhập discountPrice và > 0
+  if (onSale === true) {
+    filters.discountPrice = { $exists: true, $gt: 0 };
   }
 
   if (minPrice !== null || maxPrice !== null) {
     filters.price = {};
-    if (minPrice !== null) {
-      filters.price.$gte = minPrice;
-    }
-    if (maxPrice !== null) {
-      filters.price.$lte = maxPrice;
-    }
+    if (minPrice !== null) filters.price.$gte = minPrice;
+    if (maxPrice !== null) filters.price.$lte = maxPrice;
   }
 
   return filters;
@@ -61,16 +37,11 @@ const buildProductFilters = ({
 
 const buildSort = ({ sort }) => {
   switch (sort) {
-    case 'price_asc':
-      return { price: 1 };
-    case 'price_desc':
-      return { price: -1 };
-    case 'newest':
-      return { createdAt: -1 };
-    case 'best_selling':
-      return { soldQuantity: -1 };
-    default:
-      return { createdAt: -1 };
+    case 'price_asc': return { price: 1 };
+    case 'price_desc': return { price: -1 };
+    case 'newest': return { createdAt: -1 };
+    case 'best_selling': return { soldQuantity: -1 };
+    default: return { createdAt: -1 };
   }
 };
 
@@ -85,125 +56,68 @@ const getProducts = async (query) => {
   const categoryId = query.categoryId?.trim();
   const minPrice = normalizeNumber(query.minPrice, null);
   const maxPrice = normalizeNumber(query.maxPrice, null);
-  const discounted = query.discounted === 'true';
-  const bestSelling = query.bestSelling === 'true';
-  const newest = query.newest === 'true';
+  
+  // Nhận params mới
+  const onSale = query.onSale === 'true';
   const inStock = query.inStock === 'true';
 
-  const filters = buildProductFilters({
-    categoryId,
-    minPrice,
-    maxPrice,
-    discounted,
-    bestSelling,
-    newest,
-    inStock
-  });
-
+  const filters = buildProductFilters({ categoryId, minPrice, maxPrice, onSale, inStock });
   const searchFilter = buildSearchFilter({ search });
-
-  const combinedFilter = {
-    ...filters,
-    ...searchFilter
-  };
-
+  const combinedFilter = { ...filters, ...searchFilter };
   const sort = buildSort({ sort: query.sort });
 
   const [items, total] = await Promise.all([
-    Product.find(combinedFilter)
-      .populate('category')
-      .sort(sort)
-      .skip((page - 1) * limit)
-      .limit(limit),
+    Product.find(combinedFilter).populate('category').sort(sort).skip((page - 1) * limit).limit(limit),
     Product.countDocuments(combinedFilter)
   ]);
   return {
     items: items.map((item) => item.toJSON()),
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit)
-    }
+    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
   };
 };
 
 const getLatestProducts = async (limit = 8) => {
-  const items = await Product.find({ isActive: true })
-    .populate('category')
-    .sort({ createdAt: -1 })
-    .limit(limit);
+  const items = await Product.find({ isActive: true }).populate('category').sort({ createdAt: -1 }).limit(limit);
   return items.map((item) => item.toJSON());
 };
 
 const getBestSellingProducts = async (limit = 10) => {
-  const items = await Product.find({ isActive: true })
-    .populate('category')
-    .sort({ soldQuantity: -1, createdAt: -1 })
-    .limit(limit);
+  const items = await Product.find({ isActive: true }).populate('category').sort({ soldQuantity: -1, createdAt: -1 }).limit(limit);
   return items.map((item) => item.toJSON());
 };
 
 const getMostViewedProducts = async (limit = 10) => {
-  const items = await Product.find({ isActive: true })
-    .populate('category')
-    .sort({ viewCount: -1, createdAt: -1 }) 
-    .limit(limit);
+  const items = await Product.find({ isActive: true }).populate('category').sort({ viewCount: -1, createdAt: -1 }).limit(limit);
   return items.map((item) => item.toJSON());
 };
 
-
+// ĐÃ SỬA: Lấy trực tiếp từ Product thay vì bảng Discount cũ
 const getPromotionProducts = async (limit = 8) => {
-  const now = new Date();
-
-  const discounts = await Discount.find({
-    isActive: true,
-    startsAt: { $lte: now },
-    endsAt: { $gte: now }
+  const items = await Product.find({ 
+    isActive: true, 
+    discountPrice: { $exists: true, $gt: 0 } 
   })
-    .populate({
-      path: 'product',
-      populate: { path: 'category' }
-    })
+    .populate('category')
+    .sort({ createdAt: -1 })
     .limit(limit);
 
-  const products = discounts
-    .map((discount) => ({
-      ...discount.product?.toJSON(),
-      discount: discount.toJSON()
-    }))
-    .filter((item) => item.id);
-
-  return products;
+  return items.map((item) => item.toJSON());
 };
 
 const getProductById = async (idOrSlug) => {
   const isObjectId = mongoose.Types.ObjectId.isValid(idOrSlug);
   const query = isObjectId ? { _id: idOrSlug } : { slug: idOrSlug };
   
-  // Dùng findOneAndUpdate để cộng view an toàn. (ĐÃ XÓA LỆNH SAVE CŨ BÊN DƯỚI)
   const product = await Product.findOneAndUpdate(
     query,
     { $inc: { viewCount: 1 } },
     { new: true } 
   ).populate('category');
   
-  if (!product) {
-    return null;
-  }
+  if (!product) return null;
 
-  const now = new Date();
-  const discount = await Discount.findOne({
-    product: product._id, 
-    isActive: true,
-    startsAt: { $lte: now },
-    endsAt: { $gte: now }
-  });
-
-  return {
-    ...product.toJSON(),
-    discount: discount ? discount.toJSON() : null
-  };
+  // ĐÃ SỬA: Xóa logic tìm Discount
+  return product.toJSON();
 };
 
 const getRelatedProducts = async (productId, categoryId, limit = 6) => {
@@ -220,12 +134,6 @@ const getRelatedProducts = async (productId, categoryId, limit = 6) => {
 };
 
 module.exports = {
-  getCategories,
-  getProducts,
-  getLatestProducts,
-  getBestSellingProducts,
-  getPromotionProducts,
-  getProductById,
-  getRelatedProducts,
-  getMostViewedProducts
+  getCategories, getProducts, getLatestProducts, getBestSellingProducts,
+  getPromotionProducts, getProductById, getRelatedProducts, getMostViewedProducts
 };

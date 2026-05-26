@@ -47,17 +47,16 @@ const FilterPanel = ({
         </div>
       </div>
 
+      {/* ĐÃ SỬA: Rút gọn filter để tránh trùng lặp với Sort */}
       <div className="space-y-3">
         {[
-          { key: 'discounted', label: 'Discounted products' },
-          { key: 'bestSelling', label: 'Best selling' },
-          { key: 'newest', label: 'Newest' },
-          { key: 'inStock', label: 'In stock' }
+          { key: 'onSale', label: 'On Sale' },
+          { key: 'inStock', label: 'In Stock' }
         ].map((item) => (
-          <label key={item.key} className="flex items-center gap-3 text-sm text-inkLight">
+          <label key={item.key} className="flex items-center gap-3 text-sm text-inkLight cursor-pointer">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-blue-200 text-primary accent-primary"
+              className="h-4 w-4 rounded border-blue-200 text-primary accent-primary cursor-pointer"
               checked={Boolean(filters[item.key])}
               onChange={(event) => onChange({ [item.key]: event.target.checked })}
             />
