@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    
+    shippingAddress: { type: String, required: true },
+    phone: { type: String, required: true },
+    paymentMethod: { type: String, enum: ['COD', 'E-WALLET'], default: 'COD' },
+ 
     status: {
       type: String,
-      enum: ['PENDING', 'PAID', 'SHIPPED', 'COMPLETED', 'CANCELLED'],
-      default: 'PENDING'
+      enum: ['NEW', 'CONFIRMED', 'PREPARING', 'SHIPPING', 'DELIVERED', 'CANCELLED', 'CANCELLATION_REQUESTED'],
+      default: 'NEW'
     },
     subtotal: { type: Number, default: 0 },
     discountTotal: { type: Number, default: 0 },

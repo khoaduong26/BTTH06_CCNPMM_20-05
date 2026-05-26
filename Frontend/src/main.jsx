@@ -19,6 +19,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
 import CategoryPage from './pages/category';
 import VerifyOTP from './pages/verify-otp.jsx'; 
 import CartPage from './pages/cart.jsx';
+import CheckoutPage from './pages/checkout.jsx';
+import OrdersPage from './pages/orders.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -55,6 +57,14 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <ProtectedRoute allowedRoles={["USER", "ADMIN"]}><CartPage /></ProtectedRoute>
+      },
+      {
+        path: "checkout",
+        element: <ProtectedRoute allowedRoles={["USER", "ADMIN"]}><CheckoutPage /></ProtectedRoute>
+      },
+      {
+        path: "user/orders",
+        element: <ProtectedRoute allowedRoles={["USER", "ADMIN"]}><OrdersPage /></ProtectedRoute>
       }
     ]
   },

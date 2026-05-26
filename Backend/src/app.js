@@ -7,6 +7,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const catalogRoutes = require('./routes/catalogRoutes');
 const cartRoutes = require('./routes/cartRoutes'); 
+const orderRoutes = require('./routes/orderRoutes');
 const app = express();
 
 app.use(cors());
@@ -24,5 +25,5 @@ app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/catalog', catalogRoutes);
 app.use('/api/cart', cartRoutes); 
-
+app.use('/api/order', orderRoutes);
 module.exports = app;
