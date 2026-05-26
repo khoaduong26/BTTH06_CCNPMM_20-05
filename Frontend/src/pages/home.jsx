@@ -77,38 +77,33 @@ const HomePage = () => {
     }
   };
 
-  const loadCatalog = async (nextFilters) => {
-    setLoading((prev) => ({ ...prev, catalog: true }));
-    try {
-      const res = await fetchProducts({
-        search: nextFilters.search,
-        categoryId: nextFilters.categoryId,
-        minPrice: nextFilters.minPrice,
-        maxPrice: nextFilters.maxPrice,
-        onSale: nextFilters.onSale,    
-        inStock: nextFilters.inStock,
-        sort: nextFilters.sort,
-        page: nextFilters.page,
-        limit: 5
-      });
-      setCatalog({ items: res?.items ?? [], pagination: res?.pagination ?? { page: 1, totalPages: 1 } });
-      setError((prev) => ({ ...prev, catalog: '' }));
-    } catch {
-      setError((prev) => ({ ...prev, catalog: 'Unable to load catalog.' }));
-    } finally {
-      setLoading((prev) => ({ ...prev, catalog: false }));
-    }
-  };
+  const loadCatalog = async (searchParams, nextFilters) => {
+  setLoading((prev) => ({ ...prev, catalog: true }));
+  try {
+    const res = await fetchProducts({
+      search: searchParams, 
+      categoryId: nextFilters.categoryId,
+      onSale: nextFilters.onSale,
+      sort: nextFilters.sort,
+      page: nextFilters.page,
+      limit: 5
+    });
+    setCatalog({ items: res?.items ?? [], pagination: res?.pagination ?? { page: 1, totalPages: 1 } });
+    setError((prev) => ({ ...prev, catalog: '' }));
+  } catch {
+    setError((prev) => ({ ...prev, catalog: 'Unable to load catalog.' }));
+  } finally {
+    setLoading((prev) => ({ ...prev, catalog: false }));
+  }
+};
 
   const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        const nextFilters = { ...filters, page: 1, search: value };
-        loadCatalog(nextFilters);
-        setFilters(nextFilters);
-      }, 450),
-    [filters]
-  );
+  () =>
+    debounce((value) => {
+      loadCatalog(value, filters); 
+    }, 450),
+  [filters] 
+);
 
   useEffect(() => {
     loadLanding();
@@ -116,10 +111,10 @@ const HomePage = () => {
   }, []);
 
   const handleFilterChange = (patch) => {
-    const nextFilters = { ...filters, ...patch, page: 1, search };
-    setFilters(nextFilters);
-    loadCatalog(nextFilters);
-  };
+  const nextFilters = { ...filters, ...patch, page: 1 };
+  setFilters(nextFilters);
+  loadCatalog(search, nextFilters); 
+};
 
   const handleReset = () => {
     const nextFilters = {

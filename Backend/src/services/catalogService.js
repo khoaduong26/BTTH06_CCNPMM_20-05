@@ -14,14 +14,14 @@ const buildSearchFilter = ({ search }) => {
   return { $or: [{ name: regex }, { description: regex }] };
 };
 
-// ĐÃ SỬA: Bỏ các tham số thừa, đổi discounted thành onSale
+
 const buildProductFilters = ({ categoryId, minPrice, maxPrice, onSale, inStock }) => {
   const filters = { isActive: true };
 
   if (categoryId) filters.category = categoryId;
   if (inStock === true) filters.stockQuantity = { $gt: 0 };
   
-  // LOGIC MỚI: Chỉ lấy những sản phẩm có nhập discountPrice và > 0
+
   if (onSale === true) {
     filters.discountPrice = { $exists: true, $gt: 0 };
   }
@@ -57,7 +57,6 @@ const getProducts = async (query) => {
   const minPrice = normalizeNumber(query.minPrice, null);
   const maxPrice = normalizeNumber(query.maxPrice, null);
   
-  // Nhận params mới
   const onSale = query.onSale === 'true';
   const inStock = query.inStock === 'true';
 
