@@ -14,7 +14,7 @@ const VerifyOTP = () => {
     const email = location.state?.email;
 
     useEffect(() => {
-        // Nếu không có email (truy cập trực tiếp URL), đẩy về trang đăng ký
+        // Nếu không có email, đẩy về trang đăng ký
         if (!email) {
             notification.warning({
                 message: "Thông báo",

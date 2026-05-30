@@ -151,7 +151,10 @@ const CartPage = () => {
                                 {cartItems.map((item) => {
                                     const productId = item.product?._id || item.product?.id;
                                     const isSelected = selectedIds.includes(productId);
-
+                                    const displayPrice = (item.product?.discountPrice && item.product?.discountPrice > 0) 
+                                                        ? item.product.discountPrice 
+                                                        : (item.product?.price || 0);
+                                    const hasDiscount = item.product?.discountPrice && item.product?.discountPrice > 0;
                                     return (
                                     <tr key={productId || Math.random()} className="border-b hover:bg-gray-50 transition-colors">
                                         <td className="py-4">
@@ -172,8 +175,15 @@ const CartPage = () => {
                                                 {item.product?.name || 'Sản phẩm không tồn tại'}
                                             </span>
                                         </td>
-                                        <td className="py-4 font-medium">
-                                            {item.product?.price?.toLocaleString('vi-VN')} đ
+                                        <td className="py-4">
+                                            <div className="font-medium text-red-600">
+                                                {displayPrice.toLocaleString('vi-VN')} đ
+                                            </div>
+                                            {hasDiscount && (
+                                                <div className="text-sm text-gray-400 line-through">
+                                                    {item.product.price.toLocaleString('vi-VN')} đ
+                                                </div>
+                                            )}
                                         </td>
                                         <td className="py-4">
                                             <div className="flex items-center justify-center border w-max rounded bg-white mx-auto">
@@ -196,7 +206,7 @@ const CartPage = () => {
                                             </div>
                                         </td>
                                         <td className="py-4 font-bold text-red-600">
-                                            {((item.product?.price || 0) * item.quantity).toLocaleString('vi-VN')} đ
+                                            {(displayPrice * item.quantity).toLocaleString('vi-VN')} đ
                                         </td>
                                         <td className="py-4 text-right">
                                             <Popconfirm

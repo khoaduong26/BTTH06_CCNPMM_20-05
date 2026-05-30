@@ -90,7 +90,7 @@ const getMostViewedProducts = async (limit = 10) => {
   return items.map((item) => item.toJSON());
 };
 
-// ĐÃ SỬA: Lấy trực tiếp từ Product thay vì bảng Discount cũ
+
 const getPromotionProducts = async (limit = 8) => {
   const items = await Product.find({ 
     isActive: true, 

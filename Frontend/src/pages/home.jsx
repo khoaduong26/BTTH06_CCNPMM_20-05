@@ -107,7 +107,7 @@ const HomePage = () => {
 
   useEffect(() => {
     loadLanding();
-    loadCatalog({ ...filters, search });
+    loadCatalog(search, filters);
   }, []);
 
   const handleFilterChange = (patch) => {
@@ -128,13 +128,13 @@ const HomePage = () => {
       search
     };
     setFilters(nextFilters);
-    loadCatalog(nextFilters);
+    loadCatalog(search, nextFilters);
   };
 
   const handlePageChange = (page) => {
     const nextFilters = { ...filters, page, search };
     setFilters(nextFilters);
-    loadCatalog(nextFilters);
+    loadCatalog(search, nextFilters);
   };
 
   return (
@@ -164,7 +164,7 @@ const HomePage = () => {
           />
         </section>
 
-        {/* ĐÃ SỬA: Thay ProductGrid thành ProductCarousel để cuộn ngang */}
+        {/* Thay ProductGrid thành ProductCarousel để cuộn ngang */}
         <section id="best-sellers" className="section-shell space-y-8">
           <SectionHeader
             eyebrow="Best sellers"
