@@ -10,3 +10,11 @@ export const getUserOrdersAPI = async () => {
 export const cancelOrderAPI = async (orderId) => {
     return await axios.post(`/api/order/cancel/${orderId}`);
 };
+
+export const getAdminOrdersAPI = async () => {
+    return await axios.get('/api/order/admin/orders');
+};
+
+export const updateOrderStatusAPI = async (orderId, status) => {
+    return await axios.patch(`/api/order/admin/orders/${orderId}/status`, { status });
+};

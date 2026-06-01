@@ -5,7 +5,7 @@ const FilterPanel = ({
   onReset
 }) => {
   return (
-    <div className="space-y-6 rounded-3xl border border-blue-100 bg-surface p-6 shadow-sm shadow-blue-500/5">
+    <div className="space-y-6 rounded-lg border border-stone-200 bg-surface p-6 shadow-sm shadow-stone-900/5">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Filters</p>
         <h4 className="mt-2 text-lg font-semibold text-ink">Refine search</h4>
@@ -14,7 +14,7 @@ const FilterPanel = ({
       <div className="space-y-4">
         <label className="text-xs font-semibold uppercase tracking-[0.2em] text-inkLight">Category</label>
         <select
-          className="w-full rounded-2xl border border-blue-100 bg-white px-4 py-2 text-sm text-ink outline-none transition focus:border-primary focus:ring-4 focus:ring-blue-100"
+          className="w-full rounded-md border border-stone-200 bg-white px-4 py-2 text-sm text-ink outline-none transition focus:border-primary focus:ring-4 focus:ring-orange-100"
           value={filters.categoryId}
           onChange={(event) => onChange({ categoryId: event.target.value })}
         >
@@ -32,14 +32,14 @@ const FilterPanel = ({
         <div className="grid grid-cols-2 gap-3">
           <input
             type="number"
-            className="w-full rounded-2xl border border-blue-100 bg-white px-4 py-2 text-sm text-ink outline-none transition placeholder:text-inkLight/60 focus:border-primary focus:ring-4 focus:ring-blue-100"
+            className="w-full rounded-md border border-stone-200 bg-white px-4 py-2 text-sm text-ink outline-none transition placeholder:text-inkLight/60 focus:border-primary focus:ring-4 focus:ring-orange-100"
             placeholder="Min"
             value={filters.minPrice}
             onChange={(event) => onChange({ minPrice: event.target.value })}
           />
           <input
             type="number"
-            className="w-full rounded-2xl border border-blue-100 bg-white px-4 py-2 text-sm text-ink outline-none transition placeholder:text-inkLight/60 focus:border-primary focus:ring-4 focus:ring-blue-100"
+            className="w-full rounded-md border border-stone-200 bg-white px-4 py-2 text-sm text-ink outline-none transition placeholder:text-inkLight/60 focus:border-primary focus:ring-4 focus:ring-orange-100"
             placeholder="Max"
             value={filters.maxPrice}
             onChange={(event) => onChange({ maxPrice: event.target.value })}
@@ -56,7 +56,7 @@ const FilterPanel = ({
           <label key={item.key} className="flex items-center gap-3 text-sm text-inkLight cursor-pointer">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-blue-200 text-primary accent-primary cursor-pointer"
+              className="h-4 w-4 rounded border-stone-300 text-primary accent-primary cursor-pointer"
               checked={Boolean(filters[item.key])}
               onChange={(event) => onChange({ [item.key]: event.target.checked })}
             />
@@ -68,7 +68,7 @@ const FilterPanel = ({
       <div className="space-y-3">
         <label className="text-xs font-semibold uppercase tracking-[0.2em] text-inkLight">Sort by</label>
         <select
-          className="w-full rounded-2xl border border-blue-100 bg-white px-4 py-2 text-sm text-ink outline-none transition focus:border-primary focus:ring-4 focus:ring-blue-100"
+          className="w-full rounded-md border border-stone-200 bg-white px-4 py-2 text-sm text-ink outline-none transition focus:border-primary focus:ring-4 focus:ring-orange-100"
           value={filters.sort}
           onChange={(event) => onChange({ sort: event.target.value })}
         >
@@ -80,7 +80,7 @@ const FilterPanel = ({
       </div>
 
       <button
-        className="w-full rounded-full border border-blue-100 bg-primarySoft px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary/40 hover:bg-primary hover:text-white"
+        className="w-full rounded-md border border-orange-100 bg-primarySoft px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary/40 hover:bg-primary hover:text-white"
         onClick={onReset}
         type="button"
       >

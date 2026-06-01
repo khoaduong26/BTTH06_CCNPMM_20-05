@@ -16,7 +16,7 @@ const buildSearchFilter = ({ search }) => {
 
 
 const buildProductFilters = ({ categoryId, minPrice, maxPrice, onSale, inStock }) => {
-  const filters = { isActive: true };
+  const filters = {};
 
   if (categoryId) filters.category = categoryId;
   if (inStock === true) filters.stockQuantity = { $gt: 0 };
@@ -119,17 +119,29 @@ const getProductById = async (idOrSlug) => {
   return product.toJSON();
 };
 
-const getRelatedProducts = async (productId, categoryId, limit = 6) => {
-  const items = await Product.find({
+const getRelatedProducts = async (productId, categoryId) => {
+  if (categoryId) {
+    const sameCategoryItems = await Product.find({
+      _id: { $ne: productId },
+      category: categoryId,
+      isActive: true
+    })
+      .populate('category')
+      .sort({ soldQuantity: -1, createdAt: -1 });
+
+    if (sameCategoryItems.length > 0) {
+      return sameCategoryItems.map((item) => item.toJSON());
+    }
+  }
+
+  const fallbackItems = await Product.find({
     _id: { $ne: productId },
-    category: categoryId,
     isActive: true
   })
     .populate('category')
-    .sort({ soldQuantity: -1, createdAt: -1 })
-    .limit(limit);
+    .sort({ soldQuantity: -1, viewCount: -1, createdAt: -1 });
 
-  return items.map((item) => item.toJSON());
+  return fallbackItems.map((item) => item.toJSON());
 };
 
 module.exports = {

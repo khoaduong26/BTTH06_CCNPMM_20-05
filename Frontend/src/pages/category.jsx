@@ -91,13 +91,13 @@ const CategoryPage = () => {
           
           {loading && products.length > 0 && (
             <div className="flex justify-center py-6">
-              <span className="text-sm text-blue-500 animate-pulse">Đang tải thêm sản phẩm...</span>
+              <span className="text-sm text-primary animate-pulse">Đang tải thêm sản phẩm...</span>
             </div>
           )}
           
           {!hasMore && products.length > 0 && (
             <div className="flex justify-center py-6">
-              <span className="text-sm text-gray-500">Bạn đã xem hết sản phẩm.</span>
+              <span className="text-sm text-inkLight">Bạn đã xem hết sản phẩm.</span>
             </div>
           )}
         </section>

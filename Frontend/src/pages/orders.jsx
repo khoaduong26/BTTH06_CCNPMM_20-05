@@ -65,20 +65,19 @@ const OrdersPage = () => {
         { key: 'CANCELLED_GROUP', label: 'Đã hủy/Yêu cầu hủy' },
     ];
 
-    if (loading) return <div className="text-center py-10">Đang tải danh sách đơn hàng...</div>;
+    if (loading) return <div className="text-center py-10 text-ink">Đang tải danh sách đơn hàng...</div>;
 
     return (
-        <div className="max-w-5xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
-            <h1 className="text-2xl font-bold uppercase mb-6 text-gray-800">Đơn mua của bạn</h1>
+        <div className="max-w-5xl mx-auto px-4 py-8 min-h-screen">
+            <h1 className="text-2xl font-bold uppercase mb-6 text-ink">Đơn mua của bạn</h1>
 
-            {/* THANH TABS PHÂN LOẠI (Shopee Style) */}
-            <div className="flex bg-white shadow-sm rounded-sm mb-4 border-b overflow-x-auto whitespace-nowrap">
+            <div className="flex bg-surface shadow-sm rounded-lg border border-stone-200 mb-4 overflow-x-auto whitespace-nowrap">
                 {tabs.map(tab => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
                         className={`flex-1 py-3 px-4 text-center font-medium border-b-2 transition-colors ${
-                            activeTab === tab.key ? 'border-red-500 text-red-500' : 'border-transparent text-gray-600 hover:text-red-500'
+                            activeTab === tab.key ? 'border-primary text-primary' : 'border-transparent text-inkLight hover:text-primary'
                         }`}
                     >
                         {tab.label}
@@ -86,9 +85,8 @@ const OrdersPage = () => {
                 ))}
             </div>
 
-            {/* DANH SÁCH ĐƠN HÀNG */}
             {filteredOrders.length === 0 ? (
-                <div className="text-center bg-white p-12 rounded shadow-sm text-gray-400">Không có đơn hàng nào.</div>
+                <div className="text-center bg-surface p-12 rounded-lg border border-stone-200 shadow-sm text-inkLight">Không có đơn hàng nào.</div>
             ) : (
                 <div className="space-y-4">
                     {filteredOrders.map(order => {
@@ -99,56 +97,52 @@ const OrdersPage = () => {
                         const canRequestCancel = order.status === 'PREPARING';
 
                         return (
-                            <div key={order.id} className="bg-white shadow-sm rounded-sm p-6 border border-gray-100">
-                                {/* Header của Đơn hàng: Mã và Trạng thái */}
-                                <div className="flex justify-between items-center border-b pb-3 mb-4">
-                                    <span className="text-sm text-gray-500">
-                                        Mã đơn: <span className="font-semibold text-gray-700">{order.id}</span> | Ngày đặt: {new Date(order.createdAt).toLocaleString('vi-VN')}
+                            <div key={order.id} className="bg-surface shadow-sm rounded-lg p-6 border border-stone-200">
+                                <div className="flex justify-between items-center border-b border-stone-200 pb-3 mb-4">
+                                    <span className="text-sm text-inkLight">
+                                        Mã đơn: <span className="font-semibold text-ink">{order.id}</span> | Ngày đặt: {new Date(order.createdAt).toLocaleString('vi-VN')}
                                     </span>
                                     <div>{renderStatus(order.status)}</div>
                                 </div>
 
-                                {/* Các sản phẩm trong Đơn hàng */}
                                 <div className="space-y-3">
                                     {order.items?.map(item => (
                                         <div key={item.id} className="flex justify-between items-center text-sm">
                                             <div className="flex items-center gap-3">
                                                 <img 
                                                     src={item.product?.imageUrls?.[0] || 'https://placehold.co/50x50'} 
-                                                    alt="" className="w-12 h-12 object-cover border rounded"
+                                                    alt="" className="w-12 h-12 object-cover border border-stone-200 rounded-md"
                                                 />
                                                 <div>
-                                                    <p className="font-semibold text-gray-700">{item.product?.name}</p>
-                                                    <p className="text-xs text-gray-400">Số lượng: {item.quantity}</p>
+                                                    <p className="font-semibold text-ink">{item.product?.name}</p>
+                                                    <p className="text-xs text-inkLight/70">Số lượng: {item.quantity}</p>
                                                 </div>
                                             </div>
-                                            <span className="text-gray-600 font-medium">
+                                            <span className="text-inkLight font-medium">
                                                 {item.unitPrice?.toLocaleString('vi-VN')} đ
                                             </span>
                                         </div>
                                     ))}
                                 </div>
 
-                                {/* Phần Footer: Thông tin nhận hàng, Tổng tiền và Nút Hủy */}
-                                <div className="border-t mt-4 pt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50 p-3 rounded-sm">
-                                    <div className="text-xs text-gray-500 space-y-1">
+                                <div className="border-t border-stone-200 mt-4 pt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-primarySoft/45 p-3 rounded-md">
+                                    <div className="text-xs text-inkLight space-y-1">
                                         <p>📞 SĐT: {order.phone}</p>
                                         <p className="line-clamp-1">📍 Địa chỉ: {order.shippingAddress}</p>
                                     </div>
                                     
                                     <div className="text-right self-end md:self-auto space-y-2">
                                         <div>
-                                            <span className="text-sm text-gray-600">Tổng số tiền: </span>
-                                            <span className="text-lg font-bold text-red-600">{order.total?.toLocaleString('vi-VN')} đ</span>
+                                            <span className="text-sm text-inkLight">Tổng số tiền: </span>
+                                            <span className="text-lg font-bold text-primary">{order.total?.toLocaleString('vi-VN')} đ</span>
                                         </div>
 
-                                        {/* HIỂN THỊ NÚT HỦY DỰA TRÊN THỜI GIAN VÀ TRẠNG THÁI */}
                                         {canCancelDirectly && (
                                             <Popconfirm
                                                 title="Hủy đơn hàng" description="Bạn có chắc chắn muốn hủy đơn hàng này trực tiếp?"
                                                 onConfirm={() => handleCancel(order.id)} okText="Có, hủy đơn" cancelText="Không" okButtonProps={{ danger: true }}
                                             >
-                                                <button className="bg-red-500 text-white px-4 py-1.5 rounded text-xs font-semibold hover:bg-red-600 transition">
+                                                <button className="bg-red-500 text-white px-4 py-1.5 rounded-md text-xs font-semibold hover:bg-red-600 transition">
                                                     Hủy đơn hàng (Còn {Math.max(0, Math.floor(30 - diffMins))} phút)
                                                 </button>
                                             </Popconfirm>
@@ -159,7 +153,7 @@ const OrdersPage = () => {
                                                 title="Yêu cầu hủy đơn" description="Đơn hàng đang chuẩn bị, gửi yêu cầu yêu cầu shop hủy giúp bạn?"
                                                 onConfirm={() => handleCancel(order.id)} okText="Gửi yêu cầu" cancelText="Không"
                                             >
-                                                <button className="bg-orange-500 text-white px-4 py-1.5 rounded text-xs font-semibold hover:bg-orange-600 transition">
+                                                <button className="bg-amber-600 text-white px-4 py-1.5 rounded-md text-xs font-semibold hover:bg-amber-700 transition">
                                                     Gửi Yêu cầu hủy đơn cho shop
                                                 </button>
                                             </Popconfirm>

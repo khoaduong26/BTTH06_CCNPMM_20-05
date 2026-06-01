@@ -25,6 +25,8 @@ const debounce = (fn, delay = 400) => {
   };
 };
 
+const CATALOG_PAGE_SIZE = 5;
+
 const HomePage = () => {
   const [search, setSearch] = useState('');
   const [categories, setCategories] = useState([]);
@@ -83,10 +85,13 @@ const HomePage = () => {
     const res = await fetchProducts({
       search: searchParams, 
       categoryId: nextFilters.categoryId,
+      minPrice: nextFilters.minPrice,
+      maxPrice: nextFilters.maxPrice,
       onSale: nextFilters.onSale,
+      inStock: nextFilters.inStock,
       sort: nextFilters.sort,
       page: nextFilters.page,
-      limit: 5
+      limit: CATALOG_PAGE_SIZE
     });
     setCatalog({ items: res?.items ?? [], pagination: res?.pagination ?? { page: 1, totalPages: 1 } });
     setError((prev) => ({ ...prev, catalog: '' }));
@@ -208,23 +213,7 @@ const HomePage = () => {
           />
         </section>
 
-        <section id="categories" className="section-shell space-y-8">
-          <SectionHeader
-            eyebrow="Categories"
-            title="Browse by category"
-            description="Explore product groups curated by our team."
-          />
-          {loading.categories ? (
-            <div className="h-32 animate-pulse rounded-3xl border border-slate-200 bg-white" />
-          ) : (
-            <CategoryStrip categories={categories} />
-          )}
-          {error.categories && (
-            <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-600">{error.categories}</div>
-          )}
-        </section>
-
-        <section className="section-shell space-y-8">
+        <section id="catalog" className="section-shell space-y-8">
           <SectionHeader
             eyebrow="Catalog"
             title="Search and filter"
@@ -251,6 +240,22 @@ const HomePage = () => {
               />
             </div>
           </div>
+        </section>
+
+        <section id="categories" className="section-shell space-y-8">
+          <SectionHeader
+            eyebrow="Categories"
+            title="Browse by category"
+            description="Explore product groups curated by our team."
+          />
+          {loading.categories ? (
+            <div className="h-32 animate-pulse rounded-lg border border-stone-200 bg-surface" />
+          ) : (
+            <CategoryStrip categories={categories} />
+          )}
+          {error.categories && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-sm text-red-600">{error.categories}</div>
+          )}
         </section>
       </main>
 

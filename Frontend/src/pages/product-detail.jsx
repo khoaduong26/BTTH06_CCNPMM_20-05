@@ -80,7 +80,7 @@ const ProductDetailPage = () => {
       <div className="flex min-h-screen flex-col">
         <ShopHeader />
         <main className="section-shell py-10">
-          <div className="h-96 animate-pulse rounded-3xl border border-slate-200 bg-white" />
+          <div className="h-96 animate-pulse rounded-lg border border-stone-200 bg-surface" />
         </main>
       </div>
     );
@@ -91,7 +91,7 @@ const ProductDetailPage = () => {
       <div className="flex min-h-screen flex-col">
         <ShopHeader />
         <main className="section-shell py-10">
-          <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-600">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-sm text-red-600">
             {error || 'Product not found.'}
           </div>
         </main>
@@ -112,12 +112,12 @@ const ProductDetailPage = () => {
       <ShopHeader />
       <main className="flex flex-col gap-12 py-10">
         <section className="section-shell space-y-8">
-          <nav className="text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900">Home</Link>
+          <nav className="text-sm text-inkLight">
+            <Link to="/" className="hover:text-primary">Home</Link>
             <span className="mx-2">/</span>
             <span>{product?.category?.name || 'Category'}</span>
             <span className="mx-2">/</span>
-            <span className="text-slate-900">{product?.name || 'Product detail'}</span>
+            <span className="text-ink">{product?.name || 'Product detail'}</span>
           </nav>
 
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-start">
@@ -132,7 +132,7 @@ const ProductDetailPage = () => {
                     loop={images.length > 1}
                     watchOverflow
                     thumbs={{ swiper: images.length > 1 ? activeThumbsSwiper : null }}
-                    className="product-detail-swiper aspect-square w-full overflow-hidden rounded-3xl bg-slate-100"
+                    className="product-detail-swiper aspect-square w-full overflow-hidden rounded-lg border border-stone-200 bg-mist"
                   >
                     {images.map((image) => (
                       <SwiperSlide key={image} className="!h-full w-full">
@@ -163,7 +163,7 @@ const ProductDetailPage = () => {
                   >
                     {images.map((image) => (
                       <SwiperSlide key={`thumb-${image}`} className="!h-auto">
-                        <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200 transition hover:ring-slate-300">
+                        <div className="aspect-square overflow-hidden rounded-md bg-mist ring-1 ring-stone-200 transition hover:ring-primary/40">
                           <img
                             src={image}
                             alt={product?.name || 'Product thumbnail'}
@@ -179,10 +179,10 @@ const ProductDetailPage = () => {
                   </Swiper>
                 </div>
               ) : (
-                <div className="flex aspect-square w-full items-center justify-center rounded-3xl border border-slate-200 bg-slate-50 text-slate-400">
+                <div className="flex aspect-square w-full items-center justify-center rounded-lg border border-stone-200 bg-surface text-inkLight">
                   <div className="text-center">
-                    <p className="text-sm font-medium text-slate-500">No images available</p>
-                    <p className="mt-1 text-xs text-slate-400">Product images will appear here once uploaded.</p>
+                    <p className="text-sm font-medium text-inkLight">No images available</p>
+                    <p className="mt-1 text-xs text-inkLight/70">Product images will appear here once uploaded.</p>
                   </div>
                 </div>
               )}
@@ -190,50 +190,50 @@ const ProductDetailPage = () => {
 
             <div className="min-w-0 space-y-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{product?.category?.name || 'Category'}</p>
-                <h1 className="mt-3 font-display text-3xl text-slate-900">{product?.name || 'Product detail'}</h1>
-                <p className="mt-3 text-sm text-slate-500">{product?.description || 'No description available.'}</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-primary">{product?.category?.name || 'Category'}</p>
+                <h1 className="mt-3 font-display text-3xl font-semibold text-ink">{product?.name || 'Product detail'}</h1>
+                <p className="mt-3 text-sm text-inkLight">{product?.description || 'No description available.'}</p>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-white p-6">
+              <div className="rounded-lg border border-stone-200 bg-surface p-6 shadow-sm shadow-stone-900/5">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-2xl font-semibold text-slate-900">{formatCurrency(price)}</span>
+                  <span className="text-2xl font-semibold text-primary">{formatCurrency(price)}</span>
                   {hasDiscount && (
-                    <span className="text-sm text-slate-400 line-through">{formatCurrency(product?.price ?? 0)}</span>
+                    <span className="text-sm text-inkLight/70 line-through">{formatCurrency(product?.price ?? 0)}</span>
                   )}
                 </div>
-                <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-slate-600">
+                <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-inkLight">
                   <div>
-                    <p className="text-xs uppercase text-slate-400">SKU</p>
-                    <p className="font-semibold text-slate-900">{product?.sku || 'N/A'}</p>
+                    <p className="text-xs uppercase text-inkLight/70">SKU</p>
+                    <p className="font-semibold text-ink">{product?.sku || 'N/A'}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase text-slate-400">Stock</p>
-                    <p className="font-semibold text-slate-900">{product?.stockQuantity ?? 0}</p>
+                    <p className="text-xs uppercase text-inkLight/70">Stock</p>
+                    <p className="font-semibold text-ink">{product?.stockQuantity ?? 0}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase text-slate-400">Sold</p>
-                    <p className="font-semibold text-slate-900">{product?.soldQuantity ?? 0}</p>
+                    <p className="text-xs uppercase text-inkLight/70">Sold</p>
+                    <p className="font-semibold text-ink">{product?.soldQuantity ?? 0}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase text-slate-400">Category</p>
-                    <p className="font-semibold text-slate-900">{product?.category?.name || 'N/A'}</p>
+                    <p className="text-xs uppercase text-inkLight/70">Category</p>
+                    <p className="font-semibold text-ink">{product?.category?.name || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-white p-6">
+              <div className="rounded-lg border border-stone-200 bg-surface p-6 shadow-sm shadow-stone-900/5">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2">
+                  <div className="flex items-center gap-2 rounded-md border border-stone-200 px-3 py-2">
                     <button
-                      className="h-8 w-8 rounded-full border border-slate-200 text-slate-600"
+                      className="h-8 w-8 rounded-md border border-stone-200 text-inkLight transition hover:border-primary hover:text-primary"
                       onClick={() => handleQuantity(quantity - 1)}
                     >
                       -
                     </button>
-                    <span className="min-w-[32px] text-center text-sm font-semibold text-slate-900">{quantity}</span>
+                    <span className="min-w-[32px] text-center text-sm font-semibold text-ink">{quantity}</span>
                     <button
-                      className="h-8 w-8 rounded-full border border-slate-200 text-slate-600"
+                      className="h-8 w-8 rounded-md border border-stone-200 text-inkLight transition hover:border-primary hover:text-primary"
                       onClick={() => handleQuantity(quantity + 1)}
                     >
                       +
@@ -242,16 +242,15 @@ const ProductDetailPage = () => {
                   <button
                     onClick={handleAddToCart}
                     disabled={isAdding}
-                    className={`flex-1 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors ${
+                    className={`flex-1 rounded-md px-6 py-3 text-sm font-semibold text-white transition-colors ${
                       isAdding 
-                        ? 'bg-slate-400 cursor-not-allowed' 
-                        : 'bg-slate-900 hover:bg-slate-800'
+                        ? 'bg-stone-400 cursor-not-allowed' 
+                        : 'bg-primary hover:bg-amber-700'
                     }`}
                   >
                     {isAdding ? 'Đang thêm...' : 'Add to cart'}
                   </button>
                 </div>
-                <p className="mt-3 text-xs text-slate-400">Quantity adjusts to available stock.</p>
               </div>
             </div>
           </div>
@@ -261,7 +260,6 @@ const ProductDetailPage = () => {
           <SectionHeader
             eyebrow="Related"
             title="You may also like"
-            description="Products from the same category."
           />
           <ProductGrid items={related} emptyMessage="No related products." />
         </section>

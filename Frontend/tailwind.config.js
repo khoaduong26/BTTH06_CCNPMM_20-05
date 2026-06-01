@@ -11,12 +11,12 @@ export default {
         body: ['"Space Grotesk"', 'system-ui', 'sans-serif']
       },
       colors: {
-        ink: '#0f172a',         /* Chữ màu xanh đen đậm (dễ đọc hơn màu đen thui) */
-        inkLight: '#475569',    /* Chữ phụ màu xám xanh */
-        primary: '#2563eb',     /* XANH DƯƠNG CHỦ ĐẠO (Blue 600) */
-        primarySoft: '#eff6ff', /* Xanh dương cực nhạt (dùng làm nền cho các tag/badge) */
-        surface: '#ffffff',     /* Trắng tinh khiết cho các Card/Khối nội dung */
-        mist: '#f0f9ff'         /* Nền tổng thể xanh biển siêu nhạt */
+        ink: '#1f2933',
+        inkLight: '#667085',
+        primary: '#b45309',
+        primarySoft: '#fff7ed',
+        surface: '#fffdfa',
+        mist: '#f6f1e8'
       }
     }
   },

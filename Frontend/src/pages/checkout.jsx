@@ -120,68 +120,66 @@ const CheckoutPage = () => {
     }, 0);
     const total = subtotal; // Freeship
 
-    if (loadingData) return <div className="text-center py-10">Đang tải thông tin đơn hàng...</div>;
+    if (loadingData) return <div className="text-center py-10 text-ink">Đang tải thông tin đơn hàng...</div>;
 
     return (
-        <div className="bg-gray-100 min-h-screen py-8 text-gray-800">
+        <div className="min-h-screen py-8 text-ink">
             <div className="max-w-5xl mx-auto px-4 space-y-4">
-                <h1 className="text-2xl font-bold text-gray-800 mb-6">Thanh Toán Đơn Hàng</h1>
+                <h1 className="text-2xl font-bold text-ink mb-6">Thanh Toán Đơn Hàng</h1>
 
                 <form onSubmit={handleCheckoutCOD} className="space-y-4">
-                    {/* SECTION 1: ĐỊA CHỈ NHẬN HÀNG */}
-                    <div className="bg-white rounded-sm shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,#ff6c6c,#ff6c6c_33px,transparent_0,transparent_41px,#428bfa_0,#428bfa_74px,transparent_0,transparent_82px)]"></div>
+                    <div className="bg-surface rounded-lg border border-stone-200 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,#b45309,#b45309_33px,transparent_0,transparent_41px,#047857_0,#047857_74px,transparent_0,transparent_82px)]"></div>
                         <div className="p-6">
-                            <h2 className="text-lg font-semibold mb-4 text-red-600 flex items-center gap-2">📍 Địa Chỉ Nhận Hàng</h2>
+                            <h2 className="text-lg font-semibold mb-4 text-primary flex items-center gap-2">📍 Địa Chỉ Nhận Hàng</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Họ và tên người nhận</label>
-                                    <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full border p-2 rounded" required placeholder="Nhập họ tên" />
+                                    <label className="block text-sm text-inkLight mb-1">Họ và tên người nhận</label>
+                                    <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full border border-stone-200 p-2 rounded-md outline-none focus:border-primary focus:ring-4 focus:ring-orange-100" required placeholder="Nhập họ tên" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Số điện thoại</label>
-                                    <input type="text" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full border p-2 rounded" required placeholder="Nhập số điện thoại" />
+                                    <label className="block text-sm text-inkLight mb-1">Số điện thoại</label>
+                                    <input type="text" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full border border-stone-200 p-2 rounded-md outline-none focus:border-primary focus:ring-4 focus:ring-orange-100" required placeholder="Nhập số điện thoại" />
                                 </div>
                                 <div className="md:col-span-2">
                                     <div className="flex justify-between items-end mb-1">
-                                        <label className="block text-sm text-gray-600">Địa chỉ giao hàng cụ thể</label>
-                                        <button type="button" onClick={handleGetLocation} disabled={fetchingLocation} className={`text-sm flex items-center gap-1 font-semibold ${fetchingLocation ? 'text-gray-400' : 'text-blue-600'}`}>
+                                        <label className="block text-sm text-inkLight">Địa chỉ giao hàng cụ thể</label>
+                                        <button type="button" onClick={handleGetLocation} disabled={fetchingLocation} className={`text-sm flex items-center gap-1 font-semibold ${fetchingLocation ? 'text-stone-400' : 'text-emerald-700'}`}>
                                             {fetchingLocation ? '⏳ Đang định vị...' : '📍 Tự động lấy vị trí'}
                                         </button>
                                     </div>
-                                    <textarea name="shippingAddress" value={formData.shippingAddress} onChange={handleInputChange} className="w-full border p-2 rounded" rows="2" required placeholder="Tòa nhà, Đường, Phường..."></textarea>
+                                    <textarea name="shippingAddress" value={formData.shippingAddress} onChange={handleInputChange} className="w-full border border-stone-200 p-2 rounded-md outline-none focus:border-primary focus:ring-4 focus:ring-orange-100" rows="2" required placeholder="Tòa nhà, Đường, Phường..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* SECTION 2: SẢN PHẨM & GHI CHÚ */}
-                    <div className="bg-white p-6 rounded-sm shadow-sm">
-                        <h2 className="text-lg font-semibold mb-4 border-b pb-2">Sản phẩm đơn hàng</h2>
+                    <div className="bg-surface p-6 rounded-lg border border-stone-200 shadow-sm">
+                        <h2 className="text-lg font-semibold mb-4 border-b border-stone-200 pb-2">Sản phẩm đơn hàng</h2>
                         <div className="space-y-4 mb-6">
                             {cartItems.map(item => (
-                                <div key={item.product?._id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                                <div key={item.product?._id} className="flex items-center justify-between border-b border-stone-100 pb-4 last:border-0 last:pb-0">
                                     <div className="flex items-center gap-4">
-                                        <img src={item.product?.imageUrls?.[0] || 'https://placehold.co/80x80'} alt={item.product?.name} className="w-16 h-16 object-cover border rounded"/>
+                                        <img src={item.product?.imageUrls?.[0] || 'https://placehold.co/80x80'} alt={item.product?.name} className="w-16 h-16 object-cover border border-stone-200 rounded-md"/>
                                         <div>
-                                            <p className="font-semibold text-gray-700">{item.product?.name || 'Sản phẩm'}</p>
+                                            <p className="font-semibold text-ink">{item.product?.name || 'Sản phẩm'}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         {/* Nếu có giá giảm thì in giá giảm + giá gốc gạch ngang, nếu không thì in giá gốc */}
                                         {item.product?.discountPrice && item.product?.discountPrice > 0 ? (
-                                            <div className="text-gray-600">
-                                                <span className="line-through text-gray-400 text-sm mr-2">{item.product?.price?.toLocaleString('vi-VN')} đ</span>
+                                            <div className="text-inkLight">
+                                                <span className="line-through text-inkLight/60 text-sm mr-2">{item.product?.price?.toLocaleString('vi-VN')} đ</span>
                                                 <span>{item.product?.discountPrice?.toLocaleString('vi-VN')} đ</span>
                                             </div>
                                         ) : (
-                                            <div className="text-gray-600">{item.product?.price?.toLocaleString('vi-VN')} đ</div>
+                                            <div className="text-inkLight">{item.product?.price?.toLocaleString('vi-VN')} đ</div>
                                         )}
                                         
-                                        <p className="text-sm text-gray-500">x{item.quantity}</p>
+                                        <p className="text-sm text-inkLight">x{item.quantity}</p>
                                         
                                         {/* Tổng tiền của món đó = Giá áp dụng nhân số lượng */}
-                                        <p className="font-semibold text-gray-800 mt-1">
+                                        <p className="font-semibold text-ink mt-1">
                                             {(((item.product?.discountPrice && item.product?.discountPrice > 0) 
                                                 ? item.product.discountPrice 
                                                 : (item.product?.price || 0)) * item.quantity).toLocaleString('vi-VN')} đ
@@ -190,36 +188,34 @@ const CheckoutPage = () => {
                                 </div>
                             ))}
                         </div>
-                        <div className="flex items-center border-t pt-4">
-                            <label className="text-gray-700 whitespace-nowrap mr-4 font-medium">Lời nhắn:</label>
-                            <input type="text" name="note" value={formData.note} onChange={handleInputChange} className="w-full border-b border-gray-300 py-1 bg-transparent text-sm" placeholder="Lưu ý cho người bán..."/>
+                        <div className="flex items-center border-t border-stone-200 pt-4">
+                            <label className="text-ink whitespace-nowrap mr-4 font-medium">Lời nhắn:</label>
+                            <input type="text" name="note" value={formData.note} onChange={handleInputChange} className="w-full border-b border-stone-300 py-1 bg-transparent text-sm outline-none focus:border-primary" placeholder="Lưu ý cho người bán..."/>
                         </div>
                     </div>
 
-                    {/* SECTION 3: PHƯƠNG THỨC THANH TOÁN */}
-                    <div className="bg-white p-6 rounded-sm shadow-sm">
+                    <div className="bg-surface p-6 rounded-lg border border-stone-200 shadow-sm">
                         <h2 className="text-lg font-semibold mb-4">Phương thức thanh toán</h2>
                         <div className="flex gap-4">
-                            <button type="button" className="border-2 border-red-500 text-red-500 bg-red-50 py-2 px-4 rounded font-medium relative">
+                            <button type="button" className="border-2 border-primary text-primary bg-primarySoft py-2 px-4 rounded-md font-medium relative">
                                 Thanh toán khi nhận hàng (COD)
-                                <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-xs flex items-center justify-center rounded-bl-sm">✓</div>
+                                <div className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-xs flex items-center justify-center rounded-bl-sm">✓</div>
                             </button>
                         </div>
                     </div>
 
-                    {/* SECTION 4: TỔNG KẾT & ĐẶT HÀNG */}
-                    <div className="bg-[#fffefb] border border-gray-200 p-6 rounded-sm shadow-sm text-right">
-                        <div className="flex justify-end items-center mb-2 gap-4 text-gray-600">
+                    <div className="bg-surface border border-stone-200 p-6 rounded-lg shadow-sm text-right">
+                        <div className="flex justify-end items-center mb-2 gap-4 text-inkLight">
                             <span>Tổng tiền hàng:</span>
                             <span className="w-32">{subtotal.toLocaleString('vi-VN')} đ</span>
                         </div>
                         <div className="flex justify-end items-center mb-6 gap-4">
-                            <span className="font-semibold text-gray-700">Tổng thanh toán:</span>
-                            <span className="w-32 text-2xl font-bold text-red-600">{total.toLocaleString('vi-VN')} đ</span>
+                            <span className="font-semibold text-ink">Tổng thanh toán:</span>
+                            <span className="w-32 text-2xl font-bold text-primary">{total.toLocaleString('vi-VN')} đ</span>
                         </div>
-                        <div className="flex justify-between items-center border-t pt-6">
-                            <p className="text-sm text-gray-500 text-left max-w-md">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <span className="text-blue-600 cursor-pointer">Điều khoản</span>.</p>
-                            <button type="submit" disabled={submitting} className={`bg-red-600 text-white px-10 py-3 rounded text-lg font-bold hover:bg-red-700 transition shadow ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        <div className="flex justify-between items-center border-t border-stone-200 pt-6">
+                            <p className="text-sm text-inkLight text-left max-w-md">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <span className="text-primary cursor-pointer">Điều khoản</span>.</p>
+                            <button type="submit" disabled={submitting} className={`bg-primary text-white px-10 py-3 rounded-md text-lg font-bold hover:bg-amber-700 transition shadow ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                 {submitting ? 'Đang xử lý...' : 'ĐẶT HÀNG'}
                             </button>
                         </div>

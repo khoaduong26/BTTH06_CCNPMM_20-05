@@ -91,51 +91,50 @@ const CartPage = () => {
     const totalPrice = cartItems
     .filter(item => selectedIds.includes(item.product?._id || item.product?.id))
     .reduce((total, item) => {
-        const actualPrice = (item.product?.discountPrice && item.product?.discountPrice > 0)
-            ? item.product.discountPrice
-            : (item.product?.price || 0);
+        const originalPrice = Number(item.product?.price || 0);
+        const discountPrice = Number(item.product?.discountPrice || 0);
+        const hasDiscount = discountPrice > 0 && discountPrice < originalPrice;
+        const actualPrice = hasDiscount ? discountPrice : originalPrice;
             
         return total + (actualPrice * item.quantity);
     }, 0);
 
     const isAllSelected = cartItems.length > 0 && selectedIds.length === cartItems.length;
 
-    if (loading) return <div className="text-center py-10 text-xl font-semibold">Đang tải giỏ hàng...</div>;
+    if (loading) return <div className="text-center py-10 text-xl font-semibold text-ink">Đang tải giỏ hàng...</div>;
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
             
-            {/* CẬP NHẬT: TIÊU ĐỀ CHỨA NÚT XEM LỊCH SỬ ĐƠN MUA (Shopee/TikTok Style) */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b-2 border-gray-200 pb-4 gap-4">
-                <h1 className="text-3xl font-bold uppercase text-gray-800">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-stone-200 pb-4 gap-4">
+                <h1 className="text-3xl font-bold uppercase text-ink">
                     Giỏ hàng của bạn
                 </h1>
                 <Link 
                     to="/user/orders" 
-                    className="flex items-center gap-2 text-blue-600 hover:text-white border border-blue-600 hover:bg-blue-600 rounded px-4 py-2 font-semibold text-sm transition-all shadow-sm"
+                    className="flex items-center gap-2 text-primary hover:text-white border border-primary hover:bg-primary rounded-md px-4 py-2 font-semibold text-sm transition-all shadow-sm"
                 >
                     📋 Đơn mua của tôi
                 </Link>
             </div>
 
             {cartItems.length === 0 ? (
-                <div className="text-center bg-white p-10 rounded shadow">
-                    <p className="mb-4 text-gray-500">Giỏ hàng của bạn đang trống.</p>
-                    <Link to="/" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                <div className="text-center bg-surface p-10 rounded-lg border border-stone-200 shadow-sm">
+                    <p className="mb-4 text-inkLight">Giỏ hàng của bạn đang trống.</p>
+                    <Link to="/" className="bg-primary text-white px-6 py-2 rounded-md hover:bg-amber-700 transition">
                         Tiếp tục mua sắm
                     </Link>
                 </div>
             ) : (
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Cột danh sách sản phẩm */}
-                    <div className="w-full lg:w-3/4 bg-white rounded shadow p-6 overflow-x-auto">
+                    <div className="w-full lg:w-3/4 bg-surface rounded-lg border border-stone-200 shadow-sm p-6 overflow-x-auto">
                         <table className="w-full text-left border-collapse min-w-[600px]">
                             <thead>
-                                <tr className="border-b text-gray-600">
+                                <tr className="border-b border-stone-200 text-inkLight">
                                     <th className="pb-3 w-10">
                                         <input 
                                             type="checkbox" 
-                                            className="w-5 h-5 cursor-pointer accent-blue-600"
+                                            className="w-5 h-5 cursor-pointer accent-primary"
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
                                         />
@@ -151,16 +150,16 @@ const CartPage = () => {
                                 {cartItems.map((item) => {
                                     const productId = item.product?._id || item.product?.id;
                                     const isSelected = selectedIds.includes(productId);
-                                    const displayPrice = (item.product?.discountPrice && item.product?.discountPrice > 0) 
-                                                        ? item.product.discountPrice 
-                                                        : (item.product?.price || 0);
-                                    const hasDiscount = item.product?.discountPrice && item.product?.discountPrice > 0;
+                                    const originalPrice = Number(item.product?.price || 0);
+                                    const discountPrice = Number(item.product?.discountPrice || 0);
+                                    const hasDiscount = discountPrice > 0 && discountPrice < originalPrice;
+                                    const displayPrice = hasDiscount ? discountPrice : originalPrice;
                                     return (
-                                    <tr key={productId || Math.random()} className="border-b hover:bg-gray-50 transition-colors">
+                                    <tr key={productId || Math.random()} className="border-b border-stone-100 hover:bg-primarySoft/40 transition-colors">
                                         <td className="py-4">
                                             <input 
                                                 type="checkbox" 
-                                                className="w-5 h-5 cursor-pointer accent-blue-600"
+                                                className="w-5 h-5 cursor-pointer accent-primary"
                                                 checked={isSelected}
                                                 onChange={() => handleToggleSelect(productId)}
                                             />
@@ -169,27 +168,27 @@ const CartPage = () => {
                                             <img 
                                                 src={item.product?.imageUrls?.[0] || 'https://placehold.co/150x150?text=No+Image'} 
                                                 alt={item.product?.name || 'Sản phẩm'} 
-                                                className="w-16 h-16 object-cover border rounded"
+                                                className="w-16 h-16 object-cover border border-stone-200 rounded-md"
                                             />
-                                            <span className="font-semibold text-gray-700 line-clamp-2">
+                                            <span className="font-semibold text-ink line-clamp-2">
                                                 {item.product?.name || 'Sản phẩm không tồn tại'}
                                             </span>
                                         </td>
                                         <td className="py-4">
-                                            <div className="font-medium text-red-600">
+                                            <div className="font-medium text-primary">
                                                 {displayPrice.toLocaleString('vi-VN')} đ
                                             </div>
                                             {hasDiscount && (
-                                                <div className="text-sm text-gray-400 line-through">
-                                                    {item.product.price.toLocaleString('vi-VN')} đ
+                                                <div className="text-sm text-inkLight/60 line-through">
+                                                    {originalPrice.toLocaleString('vi-VN')} đ
                                                 </div>
                                             )}
                                         </td>
                                         <td className="py-4">
-                                            <div className="flex items-center justify-center border w-max rounded bg-white mx-auto">
+                                            <div className="flex items-center justify-center border border-stone-200 w-max rounded-md bg-white mx-auto">
                                                 <button 
                                                     onClick={() => handleUpdateQuantity(productId, Number(item.quantity) - 1)}
-                                                    className="px-3 py-1 hover:bg-gray-100 font-bold text-gray-600 transition-colors"
+                                                    className="px-3 py-1 hover:bg-primarySoft font-bold text-inkLight transition-colors"
                                                 >-</button>
                                                 <input 
                                                     type="number" min="1" value={item.quantity}
@@ -197,15 +196,15 @@ const CartPage = () => {
                                                         const val = parseInt(e.target.value);
                                                         if (!isNaN(val) && val > 0) handleUpdateQuantity(productId, val);
                                                     }}
-                                                    className="w-12 text-center outline-none border-x py-1 font-semibold text-gray-800 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                                    className="w-12 text-center outline-none border-x border-stone-200 py-1 font-semibold text-ink [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                 />
                                                 <button 
                                                     onClick={() => handleUpdateQuantity(productId, Number(item.quantity) + 1)}
-                                                    className="px-3 py-1 hover:bg-gray-100 font-bold text-gray-600 transition-colors"
+                                                    className="px-3 py-1 hover:bg-primarySoft font-bold text-inkLight transition-colors"
                                                 >+</button>
                                             </div>
                                         </td>
-                                        <td className="py-4 font-bold text-red-600">
+                                        <td className="py-4 font-bold text-primary">
                                             {(displayPrice * item.quantity).toLocaleString('vi-VN')} đ
                                         </td>
                                         <td className="py-4 text-right">
@@ -224,15 +223,14 @@ const CartPage = () => {
                         </table>
                     </div>
 
-                    {/* Cột Tổng kết */}
                     <div className="w-full lg:w-1/4">
-                        <div className="bg-white rounded shadow p-6 sticky top-24">
-                            <h2 className="text-xl font-bold uppercase border-b pb-3 mb-4 text-gray-800">Thông tin đơn hàng</h2>
-                            <div className="flex justify-between mb-4 text-gray-600">
+                        <div className="bg-surface rounded-lg border border-stone-200 shadow-sm p-6 sticky top-24">
+                            <h2 className="text-xl font-bold uppercase border-b border-stone-200 pb-3 mb-4 text-ink">Thông tin đơn hàng</h2>
+                            <div className="flex justify-between mb-4 text-inkLight">
                                 <span>Đã chọn:</span>
                                 <span className="font-semibold">{selectedIds.length} sản phẩm</span>
                             </div>
-                            <div className="flex justify-between mb-6 text-xl font-bold text-red-600 border-t pt-4">
+                            <div className="flex justify-between mb-6 text-xl font-bold text-primary border-t border-stone-200 pt-4">
                                 <span>Tổng cộng:</span>
                                 <span>{totalPrice.toLocaleString('vi-VN')} đ</span>
                             </div>
@@ -240,7 +238,7 @@ const CartPage = () => {
                             <button 
                                 onClick={handleGoToCheckout}
                                 disabled={selectedIds.length === 0}
-                                className={`w-full text-white py-3 rounded font-bold uppercase tracking-wide transition ${selectedIds.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}`}
+                                className={`w-full text-white py-3 rounded-md font-bold uppercase tracking-wide transition ${selectedIds.length === 0 ? 'bg-stone-400 cursor-not-allowed' : 'bg-primary hover:bg-amber-700'}`}
                             >
                                 Mua Hàng
                             </button>
