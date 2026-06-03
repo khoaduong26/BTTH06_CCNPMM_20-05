@@ -115,7 +115,6 @@ const getProductById = async (idOrSlug) => {
   
   if (!product) return null;
 
-  // ĐÃ SỬA: Xóa logic tìm Discount
   return product.toJSON();
 };
 

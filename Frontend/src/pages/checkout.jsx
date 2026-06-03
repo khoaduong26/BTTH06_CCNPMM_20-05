@@ -32,7 +32,7 @@ const CheckoutPage = () => {
         try {
             const res = await getCartAPI();
             if (res && res.cart && res.cart.items.length > 0) {
-                // QUAN TRỌNG: Chỉ lọc và hiển thị những sản phẩm nằm trong mảng selectedIds
+                // Chỉ lọc và hiển thị những sản phẩm nằm trong mảng selectedIds
                 const filteredItems = res.cart.items.filter(item => 
                     selectedIds.includes(item.product?._id || item.product?.id)
                 );

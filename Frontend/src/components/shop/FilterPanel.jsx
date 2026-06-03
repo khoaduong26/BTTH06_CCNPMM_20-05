@@ -47,7 +47,6 @@ const FilterPanel = ({
         </div>
       </div>
 
-      {/* ĐÃ SỬA: Rút gọn filter để tránh trùng lặp với Sort */}
       <div className="space-y-3">
         {[
           { key: 'onSale', label: 'On Sale' },
